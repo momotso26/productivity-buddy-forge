@@ -11,6 +11,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -77,16 +80,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "AI Workplace Productivity Assistant" },
+      {
+        name: "description",
+        content:
+          "Draft emails, summarise meetings, plan tasks and research topics in one AI workspace.",
+      },
+      { property: "og:title", content: "AI Workplace Productivity Assistant" },
+      {
+        property: "og:description",
+        content: "One calm workspace for drafting, summarising, planning and research.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -119,8 +133,27 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full bg-background">
+          <AppSidebar />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border bg-background/85 px-4 backdrop-blur-md">
+              <SidebarTrigger />
+              <span className="text-sm font-medium text-muted-foreground">
+                AI Workplace Productivity Assistant
+              </span>
+              <span className="ml-auto rounded-full border border-border bg-surface px-2.5 py-1 text-xs text-muted-foreground">
+                Prototype · simulated AI
+              </span>
+            </header>
+            <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-8">
+              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              <Outlet />
+            </main>
+          </div>
+        </div>
+        <Toaster position="top-right" richColors />
+      </SidebarProvider>
     </QueryClientProvider>
   );
 }
